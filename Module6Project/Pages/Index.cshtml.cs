@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace _3456yu.Pages
+namespace _Module6Project.Pages
 {
     public class IndexModel : PageModel
     {
