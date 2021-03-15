@@ -23,7 +23,7 @@ namespace Module6Project
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseStatusCodePages();
+            //app.UseStatusCodePages();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
