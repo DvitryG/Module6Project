@@ -32,7 +32,7 @@ namespace Module6Project
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hello Wors!");
+                    await context.Response.WriteAsync("Hello Wor!");
                 });
             });
         }
