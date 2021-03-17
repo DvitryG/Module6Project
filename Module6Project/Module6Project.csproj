@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="wwwroot\js\algorithms\" />
+    <Folder Include="wwwroot\js\engine\" />
   </ItemGroup>
 
   <ItemGroup>
