@@ -17,10 +17,10 @@
         this.drawGrid(cell_size, num_cells);
 
         this.context.stroke();
-        return this.context;
     }
 
     drawGrid(cell_size, num_cells) {
+        this.context.strokeStyle = "#888";
         this.context.strokeRect(0.5, 0.5, cell_size * num_cells - 1, cell_size * num_cells - 1);
         for (var x = 0.5; x <= cell_size * num_cells; x += cell_size) {
             this.context.moveTo(x, 0.5);
@@ -34,25 +34,35 @@
             this.context.moveTo(0.5, y + (cell_size - 1));
             this.context.lineTo(cell_size * num_cells - 1, y + (cell_size - 1));
         }
-        //context.strokeStyle = "#888";
     }
 
     decorateCell(x, y, decor) {
         if (decor == "None") {
-            this.context.clearRect(x, y, width, height);
-        }
-        else if (decor == decor.match(/#\w{1,6}/)) {
-            //this.context.
+            this.context.clearRect(this.cell_size * x + 1, this.cell_size * y + 1, this.cell_size - 2, this.cell_size - 2);
         }
         else {
-
+            if (decor == decor.match(/#\w{1,6}/)) {
+                this.context.fillStyle = decor;
+                this.context.fillRect(this.cell_size * x + 1, this.cell_size * y + 1, this.cell_size - 2, this.cell_size - 2)
+            }
+            else {
+                /*Тут должна быть реализована вставка картинок*/
+            }
         }
-
     }
 }
 
 function init() {
-    var context = new render("canvas", 4, 10);
+    var canvas = new render("canvas", 40, 7);
+    canvas.decorateCell(3, 2, "#f00");
+    canvas.decorateCell(3, 3, "#f00");
+    canvas.decorateCell(5, 2, "#f00");
+    canvas.decorateCell(5, 3, "#f00");
+    canvas.decorateCell(2, 5, "#f00");
+    canvas.decorateCell(3, 6, "#f00");
+    canvas.decorateCell(4, 6, "#f00");
+    canvas.decorateCell(5, 6, "#f00");
+    canvas.decorateCell(6, 5, "#f00");
 }
 
 window.onload = init;
