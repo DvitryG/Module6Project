@@ -5,10 +5,10 @@
         this.num_cells = num_cells;
         this.cell_border = cell_border;
 
-        var canvas = document.getElementById(canvas_name);
-        canvas.height = cell_size * num_cells;
-        canvas.width = cell_size * num_cells;
-        this.context = canvas.getContext('2d');
+        this.canvas = document.getElementById(canvas_name);
+        this.canvas.height = cell_size * num_cells;
+        this.canvas.width = cell_size * num_cells;
+        this.context = this.canvas.getContext('2d');
 
         this.context.mozImageSmoothingEnabled = false;
         this.context.webkitImageSmoothingEnabled = false;
@@ -40,7 +40,6 @@
     }
 
     decorateCell(x, y, decor) {
-        var border = this.cell_border
         if (decor == "None") {
             this.context.clearRect(this.cell_size * x + this.cell_border, this.cell_size * y + this.cell_border, this.cell_size - 2 * this.cell_border, this.cell_size - 2 * this.cell_border);
         }
@@ -54,11 +53,24 @@
             }
         }
     }
+
+    onMouseMove(e, decor) {
+        var x = Math.floor(e.offsetX / this.cell_size);
+        var y = Math.floor(e.offsetY / this.cell_size);
+        if (e.buttons > 0) {
+            this.decorateCell(x, y, decor);
+        }
+    }
+
+    paint(decor) {
+        this.canvas.onmousemove = (e) => this.onMouseMove(e, decor);
+    }
 }
 
 function init() {
-    var canvas = new render("canvas", 4, 10, 1);
+    var canvas = new render("canvas", 4, 100, 1);
     canvas.drawGrid("#000");
+    canvas.paint("#f00");
 }
 
 window.onload = init;
