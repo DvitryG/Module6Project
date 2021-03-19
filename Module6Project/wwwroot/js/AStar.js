@@ -62,7 +62,7 @@
         var x = Math.floor((e.offsetX * this.num_cells) / this.canvas_size);
         var y = Math.floor((e.offsetY * this.num_cells) / this.canvas_size);
         if (e.buttons > 0) {
-            console.log(`x: ${x}  y: ${y}`);
+            //console.log(`x: ${x}  y: ${y}`);
             this.decorateCell(x, y, decor);
         }
     }
