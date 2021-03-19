@@ -1,6 +1,7 @@
 ﻿class render {
-    constructor(canvas_name, cell_size, num_cells, cell_border) {
+    constructor(canvas_name, canvas_size, cell_size, num_cells, cell_border) {
         this.canvas_name = canvas_name;
+        this.canvas_size = canvas_size;
         this.cell_size = cell_size;
         this.num_cells = num_cells;
         this.cell_border = cell_border;
@@ -8,6 +9,9 @@
         this.canvas = document.getElementById(canvas_name);
         this.canvas.height = cell_size * num_cells;
         this.canvas.width = cell_size * num_cells;
+        this.canvas.style.height = `${canvas_size}px`;
+        this.canvas.style.width = `${canvas_size}px`;
+        this.canvas.style.imageRendering = "pixelated";
         this.context = this.canvas.getContext('2d');
 
         this.context.mozImageSmoothingEnabled = false;
@@ -55,9 +59,10 @@
     }
 
     onMouseMove(e, decor) {
-        var x = Math.floor(e.offsetX / this.cell_size);
-        var y = Math.floor(e.offsetY / this.cell_size);
+        var x = Math.floor((e.offsetX * this.num_cells) / this.canvas_size);
+        var y = Math.floor((e.offsetY * this.num_cells) / this.canvas_size);
         if (e.buttons > 0) {
+            console.log(`x: ${x}  y: ${y}`);
             this.decorateCell(x, y, decor);
         }
     }
@@ -68,7 +73,7 @@
 }
 
 function init() {
-    var canvas = new render("canvas", 4, 100, 1);
+    var canvas = new render("canvas", 2500, 4, 2500, 0);
     canvas.drawGrid("#000");
     canvas.paint("#f00");
 }

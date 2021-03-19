@@ -89,7 +89,7 @@ button.accept-policy {
 
 #canvas {
     position: absolute;
-    image-rendering: pixelated;
-    /*width: 500px;
+    /*image-rendering: pixelated;
+    width: 500px;
     height: 500px;*/
 }
