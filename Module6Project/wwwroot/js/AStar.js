@@ -50,7 +50,8 @@
         this.context.stroke();
     }
 
-    decorateCell(x, y, decor) {
+    decorateCell(x, y, value, decor) {
+        this._values[y][x] = value;
         if (decor == "None") {
             this.context.clearRect(this.cell_size * x + this.cell_border, this.cell_size * y + this.cell_border, this.cell_size - 2 * this.cell_border, this.cell_size - 2 * this.cell_border);
         }
@@ -65,33 +66,30 @@
         }
     }
 
-    onMouse(e, value, decor) {
+    _onMouse(e, value, decor) {
         var x = Math.floor((e.offsetX * this.num_cells) / this.canvas_size);
         var y = Math.floor((e.offsetY * this.num_cells) / this.canvas_size);
         if (e.buttons > 0) {
             //console.log(`x: ${x}  y: ${y}`);
-            this._values[y][x] = value;
-            this.decorateCell(x, y, decor);
+            this.decorateCell(x, y, value, decor);
         }
     }
 
-    mouseDraw(flag, value, decor) {
-        if (flag) {
-            this.canvas.onmousemove = (e) => this.onMouse(e, value, decor);
-            this.canvas.onmousedown = (e) => this.onMouse(e, value, decor);
-        }
-        else {
-            this.canvas.onmousemove = null;
-            this.canvas.onmousedown = null;
-        }
-        
+    onMouseDraw(value, decor) {
+        this.canvas.onmousemove = (e) => this._onMouse(e, value, decor);
+        this.canvas.onmousedown = (e) => this._onMouse(e, value, decor);
+    }
+
+    offMouseDraw() {
+        this.canvas.onmousemove = null;
+        this.canvas.onmousedown = null;
     }
 }
 
 function init() {
     var canvas = new render("canvas", 500, 40, 50, 1);
     canvas.drawGrid("#000");
-    canvas.mouseDraw(true, 1, "#f00");
+    canvas.onMouseDraw(1, "#f00");
 }
 
 window.onload = init;
