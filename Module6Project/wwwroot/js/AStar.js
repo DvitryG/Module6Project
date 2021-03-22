@@ -5,6 +5,13 @@
         this.cell_size = cell_size;
         this.num_cells = num_cells;
         this.cell_border = cell_border;
+        this._values = new Array(num_cells);
+        for (var i = 0; i < this._values.length; ++i) {
+            this._values[i] = new Array(num_cells);
+            for (var j = 0; j < this._values.length; ++j) {
+                this._values[i][j] = 0;
+            }
+        }
 
         this.canvas = document.getElementById(canvas_name);
         this.canvas.height = cell_size * num_cells;
@@ -58,24 +65,33 @@
         }
     }
 
-    onMouseMove(e, decor) {
+    onMouse(e, value, decor) {
         var x = Math.floor((e.offsetX * this.num_cells) / this.canvas_size);
         var y = Math.floor((e.offsetY * this.num_cells) / this.canvas_size);
         if (e.buttons > 0) {
             //console.log(`x: ${x}  y: ${y}`);
+            this._values[y][x] = value;
             this.decorateCell(x, y, decor);
         }
     }
 
-    paint(decor) {
-        this.canvas.onmousemove = (e) => this.onMouseMove(e, decor);
+    mouseDraw(flag, value, decor) {
+        if (flag) {
+            this.canvas.onmousemove = (e) => this.onMouse(e, value, decor);
+            this.canvas.onmousedown = (e) => this.onMouse(e, value, decor);
+        }
+        else {
+            this.canvas.onmousemove = null;
+            this.canvas.onmousedown = null;
+        }
+        
     }
 }
 
 function init() {
-    var canvas = new render("canvas", 2500, 4, 2500, 0);
+    var canvas = new render("canvas", 500, 40, 50, 1);
     canvas.drawGrid("#000");
-    canvas.paint("#f00");
+    canvas.mouseDraw(true, 1, "#f00");
 }
 
 window.onload = init;
