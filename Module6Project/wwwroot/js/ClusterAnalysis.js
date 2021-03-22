@@ -1,5 +1,5 @@
 ﻿"use strict";
-import {Canvas} from "./engine/render.js"
+import { Canvas } from "./engine/render.js"
 
 function init() {
     var canvas = new Canvas("canvas", 500, 40, 50, 1);
