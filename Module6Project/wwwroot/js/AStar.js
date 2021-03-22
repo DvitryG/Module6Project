@@ -1,10 +1,10 @@
-﻿class render {
+﻿class Canvas {
     constructor(canvas_name, canvas_size, cell_size, num_cells, cell_border) {
-        this.canvas_name = canvas_name;
-        this.canvas_size = canvas_size;
-        this.cell_size = cell_size;
-        this.num_cells = num_cells;
-        this.cell_border = cell_border;
+        //this.canvas_name = canvas_name;
+        this._canvas_size = canvas_size;
+        this._cell_size = cell_size;
+        this._num_cells = num_cells;
+        this._cell_border = cell_border;
         this._values = new Array(num_cells);
         for (var i = 0; i < this._values.length; ++i) {
             this._values[i] = new Array(num_cells);
@@ -32,20 +32,20 @@
             this.context.strokeStyle = color;
         }
         else return;
-        if (this.cell_border == 0) return;
-        else this.context.lineWidth = this.cell_border + (this.cell_border - 1);
-        this.context.strokeRect(0.5, 0.5, this.cell_size * this.num_cells - 1, this.cell_size * this.num_cells - 1);
-        for (var x = 0.5; x <= this.cell_size * this.num_cells; x += this.cell_size) {
+        if (this._cell_border == 0) return;
+        else this.context.lineWidth = this._cell_border + (this._cell_border - 1);
+        this.context.strokeRect(0.5, 0.5, this._cell_size * this._num_cells - 1, this._cell_size * this._num_cells - 1);
+        for (var x = 0.5; x <= this._cell_size * this._num_cells; x += this._cell_size) {
             this.context.moveTo(x, 0.5);
-            this.context.lineTo(x, this.cell_size * this.num_cells - 1);
-            this.context.moveTo(x + (this.cell_size - 1), 0.5);
-            this.context.lineTo(x + (this.cell_size - 1), this.cell_size * this.num_cells - 1);
+            this.context.lineTo(x, this._cell_size * this._num_cells - 1);
+            this.context.moveTo(x + (this._cell_size - 1), 0.5);
+            this.context.lineTo(x + (this._cell_size - 1), this._cell_size * this._num_cells - 1);
         }
-        for (var y = 0.5; y <= this.cell_size * this.num_cells; y += this.cell_size) {
+        for (var y = 0.5; y <= this._cell_size * this._num_cells; y += this._cell_size) {
             this.context.moveTo(0.5, y);
-            this.context.lineTo(this.cell_size * this.num_cells - 1, y);
-            this.context.moveTo(0.5, y + (this.cell_size - 1));
-            this.context.lineTo(this.cell_size * this.num_cells - 1, y + (this.cell_size - 1));
+            this.context.lineTo(this._cell_size * this._num_cells - 1, y);
+            this.context.moveTo(0.5, y + (this._cell_size - 1));
+            this.context.lineTo(this._cell_size * this._num_cells - 1, y + (this._cell_size - 1));
         }
         this.context.stroke();
     }
@@ -53,12 +53,12 @@
     decorateCell(x, y, value, decor) {
         this._values[y][x] = value;
         if (decor == "None") {
-            this.context.clearRect(this.cell_size * x + this.cell_border, this.cell_size * y + this.cell_border, this.cell_size - 2 * this.cell_border, this.cell_size - 2 * this.cell_border);
+            this.context.clearRect(this._cell_size * x + this._cell_border, this._cell_size * y + this._cell_border, this._cell_size - 2 * this._cell_border, this._cell_size - 2 * this._cell_border);
         }
         else {
             if (decor == decor.match(/#\w{1,8}/)) {
                 this.context.fillStyle = decor;
-                this.context.fillRect(this.cell_size * x + this.cell_border, this.cell_size * y + this.cell_border, this.cell_size - 2 * this.cell_border, this.cell_size - 2 * this.cell_border)
+                this.context.fillRect(this._cell_size * x + this._cell_border, this._cell_size * y + this._cell_border, this._cell_size - 2 * this._cell_border, this._cell_size - 2 * this._cell_border)
             }
             else {
             /*Тут должна быть реализована вставка картинок*/
@@ -67,8 +67,8 @@
     }
 
     _onMouse(e, value, decor) {
-        var x = Math.floor((e.offsetX * this.num_cells) / this.canvas_size);
-        var y = Math.floor((e.offsetY * this.num_cells) / this.canvas_size);
+        var x = Math.floor((e.offsetX * this._num_cells) / this._canvas_size);
+        var y = Math.floor((e.offsetY * this._num_cells) / this._canvas_size);
         if (e.buttons > 0) {
             //console.log(`x: ${x}  y: ${y}`);
             this.decorateCell(x, y, value, decor);
@@ -87,7 +87,7 @@
 }
 
 function init() {
-    var canvas = new render("canvas", 500, 40, 50, 1);
+    var canvas = new Canvas("canvas", 500, 40, 50, 1);
     canvas.drawGrid("#000");
     canvas.onMouseDraw(1, "#f00");
 }
