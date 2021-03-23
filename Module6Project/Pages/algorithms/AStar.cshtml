@@ -3,5 +3,18 @@
 @{
     ViewData["Title"] = "A*";
 }
+<div>
+    <select id="colors">
+        <option value="0">Ничего</option>
+        <option value="1">Стены</option>
+        <option value="2">Начало</option>
+        <option value="3">Конец</option>
+    </select>
+    <select id="generators">
+        <option>Ничего</option>
+        <option>Шум Перлина</option>
+    </select>
+    <button id="start">Начать!</button>
+</div>
 <canvas id="canvas"></canvas>
 <script type="module" src="~/js/AStar.js" asp-append-version="true"></script>
