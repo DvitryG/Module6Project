@@ -1,6 +1,5 @@
 ﻿export class Canvas {
     constructor(canvas_name, canvas_size, cell_size, num_cells, cell_border) {
-        //this._canvas_name = canvas_name;
         this._canvasSize = canvas_size;
         this._cellSize = cell_size;
         this._numCells = num_cells;
@@ -52,19 +51,22 @@
     }
 
     decorateCell(x, y, value, decor) {
-        this._values[y][x] = value;
-        if (decor == "None") {
-            this.context.clearRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder);
-        }
-        else {
-            if (decor == decor.match(/#\w{1,8}/)) {
-                this.context.fillStyle = decor;
-                this.context.fillRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder)
+        if (x >= 0 && y >= 0) {
+            this._values[y][x] = value;
+            if (decor == "void") {
+                this.context.clearRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder);
             }
             else {
-                /*Тут должна быть реализована вставка картинок*/
+                if (decor == decor.match(/#\w{1,8}/)) {
+                    this.context.fillStyle = decor;
+                    this.context.fillRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder)
+                }
+                else {
+                    /*Тут должна быть реализована вставка картинок*/
+                }
             }
         }
+        else console.log(`Вы вышли за пределы области: x: ${x}  y: ${y}`);
     }
 
     _onMouse(e, value, decor) {
@@ -78,6 +80,10 @@
 
     setMouseDraw(value) {
         this._mouseFlag = value;
+        if (!this._mouseFlag) {
+            this._canvas.onmousemove = null;
+            this._canvas.onmousedown = null;
+        }
     }
 
     getMouseDraw() {
@@ -92,6 +98,41 @@
         else {
             this._canvas.onmousemove = null;
             this._canvas.onmousedown = null;
+        }
+    }
+}
+
+export class Point {
+    constructor(canvas, value, decor) {
+        this.Canvas = canvas;
+        this.value = value;
+        this.decor = decor;
+        this.lastX = null;
+        this.lastY = null;
+    }
+
+    _onMouse(e) {
+        var x = Math.floor((e.offsetX * this.Canvas._numCells) / this.Canvas._canvasSize);
+        var y = Math.floor((e.offsetY * this.Canvas._numCells) / this.Canvas._canvasSize);
+        if (e.buttons > 0) {
+            //console.log(`x: ${x}  y: ${y}`);
+            if (this.lastX != null || this.lastY != null) {
+                this.Canvas.decorateCell(this.lastX, this.lastY, 0, "void");
+            }
+            this.lastX = x;
+            this.lastY = y;
+            this.Canvas.decorateCell(this.lastX, this.lastY, this.value, this.decor);
+        }
+    }
+
+    drawPoint() {
+        if (this.Canvas._mouseFlag) {
+            this.Canvas._canvas.onmousemove = (e) => this._onMouse(e);
+            this.Canvas._canvas.onmousedown = (e) => this._onMouse(e);
+        }
+        else {
+            this.Canvas._canvas.onmousemove = null;
+            this.Canvas._canvas.onmousedown = null;
         }
     }
 }
