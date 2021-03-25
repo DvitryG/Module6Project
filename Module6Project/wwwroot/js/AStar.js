@@ -22,7 +22,29 @@ class Program {
                     closed: false,
                     parent: null,
                 }
+                console.log(`${graph[i][j].x}`);
             }
+        }
+
+        function adjacents(current) {
+            var adjacent = [];
+            var x = current.x;
+            var y = current.y;
+            console.log(`x: ${x}  y: ${y}`);
+            //if (graph[x - 1][y]) {
+                console.log(`${graph[x - 1][y]}`);
+                adjacent.push(graph[x - 1][y]);
+            //}
+            //if (graph[x][y + 1]) {
+                adjacent.push(graph[x][y + 1]);
+            //}
+            //if (graph[x + 1][y]) {
+                adjacent.push(graph[x + 1][y]);
+            //}
+            //if (graph[x][y - 1]) {
+                adjacent.push(graph[x][y - 1]);
+            //}
+            return adjacent;
         }
 
         var finish = graph[this.finish.lastX][this.finish.lastY];
@@ -45,8 +67,23 @@ class Program {
                 return path;
             }
             current.closed = true;
-            for (var v in { a: [1, 0], b:[0, 1], c: [-1, 0], d: [0, -1]}) {
-                console.log(`${v[0]} ${v[1]}`);
+            var adjacent = adjacents(current);
+            for (var v in adjacent) {
+                console.log(`${adjacent} ${v}`);
+                if (this.canvas._values[v.x][v.y] != 1 && !v.closed) {
+                    var g = current.g + 1;
+                    var h = Math.abs(v.x - this.finish.lastX) + Math.abs(v.y - this.finish.lastY);
+                    var f = g + h;
+                    if (!v.visited) open.push(v);
+                    if (!v.visited || f < v.f) {
+                        v.g = g;
+                        v.h = h;
+                        v.f = f;
+                        v.visited = true;
+                        v.parent = current;
+                    }
+                }
+                /*console.log(`${v[0]} ${v[1]}`);
                 if (this.canvas._values[current.x + v[0]][current.y + v[1]] != 1 && !graph[current.x + v[0]][current.y + v[1]].closed) {
                     var g = current.g + 1;
                     var h = Math.abs(graph[current.x + v[0]][current.y + v[1]].x - this.finish.lastX) + Math.abs(graph[current.x + v[0]][current.y + v[1]].y - this.finish.lastY);
@@ -59,7 +96,7 @@ class Program {
                         graph[current.x + v[0]][current.y + v[1]].visited = true;
                         graph[current.x + v[0]][current.y + v[1]].parent = current;
                     }
-                }
+                }*/
             }
             open.splice(open.indexOf(min), 1);
             //closed.push(current);
