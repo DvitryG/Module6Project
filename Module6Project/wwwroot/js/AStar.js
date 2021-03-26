@@ -22,7 +22,7 @@ class Program {
                     closed: false,
                     parent: null,
                 }
-                console.log(`${graph[i][j].x}`);
+                //console.log(`${graph[i][j].x}`);
             }
         }
 
@@ -30,20 +30,20 @@ class Program {
             var adjacent = [];
             var x = current.x;
             var y = current.y;
-            console.log(`x: ${x}  y: ${y}`);
-            //if (graph[x - 1][y]) {
-                console.log(`${graph[x - 1][y]}`);
+            //console.log(`x: ${x}  y: ${y}`);
+            if (graph[x - 1][y]) {
+                //console.log(`${graph[x - 1][y].x}`);
                 adjacent.push(graph[x - 1][y]);
-            //}
-            //if (graph[x][y + 1]) {
+            }
+            if (graph[x][y + 1]) {
                 adjacent.push(graph[x][y + 1]);
-            //}
-            //if (graph[x + 1][y]) {
+            }
+            if (graph[x + 1][y]) {
                 adjacent.push(graph[x + 1][y]);
-            //}
-            //if (graph[x][y - 1]) {
+            }
+            if (graph[x][y - 1]) {
                 adjacent.push(graph[x][y - 1]);
-            //}
+            }
             return adjacent;
         }
 
@@ -64,23 +64,25 @@ class Program {
                     path.push(curr);
                     curr = curr.parent;
                 }
+                console.log(`${path}`);
                 return path;
             }
             current.closed = true;
             var adjacent = adjacents(current);
-            for (var v in adjacent) {
-                console.log(`${adjacent} ${v}`);
-                if (this.canvas._values[v.x][v.y] != 1 && !v.closed) {
+            //console.log(`${adjacent[0].x}`);
+            for (var i in adjacent) {
+                //console.log(`${v}`);
+                if (this.canvas._values[adjacent[i].x][adjacent[i].y] != 1 && !adjacent[i].closed) {
                     var g = current.g + 1;
-                    var h = Math.abs(v.x - this.finish.lastX) + Math.abs(v.y - this.finish.lastY);
+                    var h = Math.abs(adjacent[i].x - this.finish.lastX) + Math.abs(adjacent[i].y - this.finish.lastY);
                     var f = g + h;
-                    if (!v.visited) open.push(v);
-                    if (!v.visited || f < v.f) {
-                        v.g = g;
-                        v.h = h;
-                        v.f = f;
-                        v.visited = true;
-                        v.parent = current;
+                    if (!adjacent[i].visited) open.push(adjacent[i]);
+                    if (!adjacent[i].visited || f < adjacent[i].f) {
+                        adjacent[i].g = g;
+                        adjacent[i].h = h;
+                        adjacent[i].f = f;
+                        adjacent[i].visited = true;
+                        adjacent[i].parent = current;
                     }
                 }
                 /*console.log(`${v[0]} ${v[1]}`);
@@ -101,6 +103,7 @@ class Program {
             open.splice(open.indexOf(min), 1);
             //closed.push(current);
         }
+        console.log(`AStar: ${false}`);
         return false;
     }
 
@@ -133,6 +136,7 @@ class Program {
         var start = document.getElementById("start").addEventListener('click', event => {
             this.canvas.setMouseDraw(false);
             way = this.AStar();
+            console.log(way);
             if (way != false) {
                 n = way.pop();
                 this.canvas.decorateCell(n.x, n.y, 0, "#fff");
