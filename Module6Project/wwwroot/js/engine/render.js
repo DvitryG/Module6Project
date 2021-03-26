@@ -51,7 +51,7 @@
     }
 
     decorateCell(x, y, value, decor) {
-        if (x >= 0 && y >= 0) {
+        if ((x >= 0 && x < this._numCells) && (y >= 0 && y < this._numCells)) {
             this._values[x][y] = value;
             if (decor == "void") {
                 this.context.clearRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder);
