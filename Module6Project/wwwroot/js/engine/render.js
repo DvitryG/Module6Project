@@ -189,8 +189,13 @@ export class SmoothArea {
                     this.context.fillRect(this.objects[i].x, this.objects[i].y, this.objects[i].width, this.objects[i].height);
                 }
                 else if (this.objects[i].type == "line") {
+                    //console.log(`линия`);
+                    this.context.lineWidth = this.objects[i].lineWidth;
+                    this.context.beginPath();
                     this.context.moveTo(this.objects[i].x1, this.objects[i].y1);
                     this.context.lineTo(this.objects[i].x2, this.objects[i].y2);
+                    this.context.stroke();
+                    this.context.lineWidth = 1;
                 }
                 else if (this.objects[i].type == "custom") {
                     this.objects[i].drawRules;
@@ -338,7 +343,9 @@ export class SmoothArea {
         if (!collision) {
             //console.log(`опа, колизий нет`);
             this.addObject(type, decor, tangible, newObj.x, newObj.y, w, h);
+            return true;
         }
+        else return false;
     }
 
     /*drawLine(x1, y1, x2, y2, width, color) {

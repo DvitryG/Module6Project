@@ -156,8 +156,8 @@ class Program {
     }
 }
 
-function init() {
+/*function init() {
     var prog = new Program();
-}
+}*/
 
-window.onload = init;
+window.onload = new Program();
