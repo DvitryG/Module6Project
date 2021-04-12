@@ -8,15 +8,20 @@ class Program {
         this.startButton();
         this.canvas.setSpeed(10);
 
-        this.numAnts;
+        //this.numAnts;
         this.numVertex = 0;
     }
 
     AntCO() {
+        if (this.numVertex < 3) {
+            console.log(`Вы в своем уме, увОжаемый?`);
+            return;
+        }
         var intervalID;
         var alfa = 1;
         var beta = 1;
         var Q = 4;
+        var p = 0.6;
         var faces = new Array(this.numVertex);
         for (var i = 0; i < faces.length; ++i) {
             faces[i] = new Array(this.numVertex);
@@ -24,18 +29,14 @@ class Program {
                 faces[i][j] = {
                     len: Math.sqrt((this.canvas.objects[i].x - this.canvas.objects[j].x) ** 2 + (this.canvas.objects[i].y - this.canvas.objects[j].y) ** 2),
                     pher: 0.5,
-                    prob: null,
                 }
             }
         }
-        var ants = new Array(this.numAnts);
+        var ants = new Array(this.numVertex);
         for (var i = 0; i < ants.length; ++i) {
             ants[i] = new Array(this.numVertex + 1);
-            var s
-            if (i > this.numVertex - 1) s = 2 * this.numVertex - i;
-            else s = i;
-            ants[i][0] = s;
-            ants[i][this.numVertex] = s;
+            ants[i][0] = i;
+            ants[i][this.numVertex] = i;
         }
 
         var stopButton = document.getElementById("stop").addEventListener('click', event => {
@@ -43,21 +44,59 @@ class Program {
         });
 
         intervalID = setInterval(() => {
-            for (var i in faces) {
-                var totalAttr = 0;
-                for (var j in faces[i]) {
-                    if (j != i) {
-                        totalAttr += faces[i][j].pher ** alfa * (1 / faces[i][j].len) ** beta;
+            for (var i = 0; i < ants.length; ++i) {
+                var choice = [];
+                for (var j = 0; j < this.numVertex; ++j) {
+                    if (j != ants[i][0]) {
+                        choice.push({
+                            num: j,
+                            prob: null,
+                        });
                     }
                 }
-                for (var j in faces[i]) {
-                    faces[i][j].prob = (faces[i].pher ** alfa * (1 / faces[i].len) ** beta) / totalAttr;
+                for (var j = 1; j < ants[i].length - 1; ++j) {
+                    var rand = Math.random();
+                    var totalAttr = 0;
+                    for (var l = 0; l < choice.length; ++l) {
+                        totalAttr += (faces[ants[i][j - 1]][choice[l].num].pher ** alfa) * ((1 / faces[ants[i][j - 1]][choice[l].num].len) ** beta);
+                    }
+                    for (var l = 0; l < choice.length; ++l) {
+                        choice[l].prob = ((faces[ants[i][j - 1]][choice[l].num].pher ** alfa) * ((1 / faces[ants[i][j - 1]][choice[l].num].len) ** beta)) / totalAttr;
+                    }
+                    var probSum = choice[0].prob, sel = 0;
+                    while (sel < choice.length) {
+                        if (probSum < rand) {
+                            ++sel;
+                            probSum += choice[sel].prob;
+                        }
+                        else {
+                            ants[i][j] = choice[sel].num;
+                            choice.splice(sel, 1);
+                            break;
+                        }
+                    }
                 }
             }
 
-            for (var i in ants) {
-
+            for (var i = 0; i < faces.length; ++i) {
+                for (var j = 0; j < faces[i].length; ++j) {
+                    faces[i][j].pher *= p;
+                }
             }
+
+            for (var i = 0; i < ants.length; ++i) {
+                var length = 0;
+                for (var j = 0; j < ants[i].length - 1; ++j) {
+                    length += faces[ants[i][j]][ants[i][j + 1]].len;
+                }
+                var left = Q / length;
+
+                for (var j = 0; j < ants[i].length - 1; ++j) {
+                    faces[ants[i][j]][ants[i][j + 1]].pher += left;
+                    faces[ants[i][j + 1]][ants[i][j]].pher += left;
+                }
+            }
+
         }, 10);
     }
 
@@ -65,15 +104,15 @@ class Program {
         var start = document.getElementById("start").addEventListener('click', event => {
             this.canvas.canvas.onmousedown = null;
             this.canvas.canvas.onmousemove = null;
-            this.numAnts = this.individInput();
+            //this.numAnts = this.individInput();
             this.AntCO();
 
         });
     }
 
-    individInput() {
+   /* individInput() {
         return parseInt(document.getElementById("individs").value, 10);
-    }
+    }*/
 
     mouseLogic(flag, type, decor, tangible, w, h) {
         if (flag) {
