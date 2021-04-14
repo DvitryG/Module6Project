@@ -58,7 +58,7 @@ class Program {
             this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
             for (var j = 0; j < individs[minIndex].length - 1; ++j) {
                 this.canvas.addObject("line", "#000", false, this.canvas.objects[individs[minIndex][j]].x + this.canvas.objects[individs[minIndex][j]].width / 2, this.canvas.objects[individs[minIndex][j]].y + this.canvas.objects[individs[minIndex][j]].height / 2, this.canvas.objects[individs[minIndex][j + 1]].x + this.canvas.objects[individs[minIndex][j + 1]].width / 2, this.canvas.objects[individs[minIndex][j + 1]].y + this.canvas.objects[individs[minIndex][j + 1]].height / 2);
-                this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 5;
+                this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;
             }
 
             for (var i in individs) {

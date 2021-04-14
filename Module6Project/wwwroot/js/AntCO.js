@@ -8,7 +8,6 @@ class Program {
         this.startButton();
         this.canvas.setSpeed(10);
 
-        //this.numAnts;
         this.numVertex = 0;
     }
 
@@ -19,8 +18,8 @@ class Program {
         }
         var intervalID;
         var alfa = 1;
-        var beta = 1;
-        var Q = 4;
+        var beta = 4;
+        var Q = 240;
         var p = 0.6;
         var faces = new Array(this.numVertex);
         for (var i = 0; i < faces.length; ++i) {
@@ -38,6 +37,7 @@ class Program {
             ants[i][0] = i;
             ants[i][this.numVertex] = i;
         }
+        var bestAnt, bestLen = null;
 
         var stopButton = document.getElementById("stop").addEventListener('click', event => {
             clearInterval(intervalID);
@@ -89,12 +89,23 @@ class Program {
                 for (var j = 0; j < ants[i].length - 1; ++j) {
                     length += faces[ants[i][j]][ants[i][j + 1]].len;
                 }
+                if (bestLen > length || bestLen == null) {
+                    bestLen = length;
+                    bestAnt = ants[i];
+                }
                 var left = Q / length;
 
                 for (var j = 0; j < ants[i].length - 1; ++j) {
                     faces[ants[i][j]][ants[i][j + 1]].pher += left;
                     faces[ants[i][j + 1]][ants[i][j]].pher += left;
                 }
+            }
+
+            this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
+
+            for (var i = 0; i < bestAnt.length - 1; ++i) {
+                this.canvas.addObject("line", "#000", false, this.canvas.objects[bestAnt[i]].x + this.canvas.objects[bestAnt[i]].width / 2, this.canvas.objects[bestAnt[i]].y + this.canvas.objects[bestAnt[i]].height / 2, this.canvas.objects[bestAnt[i + 1]].x + this.canvas.objects[bestAnt[i + 1]].width / 2, this.canvas.objects[bestAnt[i + 1]].y + this.canvas.objects[bestAnt[i + 1]].height / 2);
+                this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;
             }
 
         }, 10);
@@ -104,15 +115,10 @@ class Program {
         var start = document.getElementById("start").addEventListener('click', event => {
             this.canvas.canvas.onmousedown = null;
             this.canvas.canvas.onmousemove = null;
-            //this.numAnts = this.individInput();
             this.AntCO();
 
         });
     }
-
-   /* individInput() {
-        return parseInt(document.getElementById("individs").value, 10);
-    }*/
 
     mouseLogic(flag, type, decor, tangible, w, h) {
         if (flag) {
