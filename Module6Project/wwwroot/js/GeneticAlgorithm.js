@@ -9,11 +9,15 @@ class Program {
         this.startButton();
         this.canvas.setSpeed(10);
 
-        this.numIndivids;
+        this.numIndivids = null;
         this.numVertex = 0;
     }
 
     GAlg() {
+        if (this.numVertex < 3 || this.numIndivids == null) {
+            console.log(`Вы в своем уме, увОжаемый?`);
+            return;
+        }
         var intervalID;
         var lengthFaces = new Array(this.numVertex);
         for (var i = 0; i < lengthFaces.length; ++i) {
@@ -25,54 +29,77 @@ class Program {
         var individs = new Array(this.numIndivids);
         for (var i = 0; i < individs.length; ++i) {
             individs[i] = new Array(this.numVertex + 1);
-            for (var j = 0; j < this.numVertex; ++j) {
-                individs[i][j] = j;
+            var choice = [];
+            for (var j = 1; j < this.numVertex; ++j) {
+                choice.push(j);
             }
+            for (j = 1; j < this.numVertex; ++j) {
+                var rand = Math.random();
+                var sum = 1 / choice.length, sel = 0;
+                while (sel < choice.length) {
+                    if (sum < rand) {
+                        ++sel;
+                        sum += 1 / choice.length;
+                    }
+                    else {
+                        individs[i][j] = choice[sel];
+                        choice.splice(sel, 1);
+                        break;
+                    }
+                }
+            }
+            individs[i][0] = 0;
             individs[i][this.numVertex] = 0;
-            for (var j = 0; j < this.numVertex; ++j) {
-                individs[i][j] = j;
-            }
         }
+        var bestWay, bestLen = null;
+
         var stopButton = document.getElementById("stop").addEventListener('click', event => {
             clearInterval(intervalID);
         });
 
 
         intervalID = setInterval(() => {
-            var minIndex = 0, minNum = 0;
-            for (var j = 0; j < individs[0].length - 1; ++j) {
+            var bestStepInd = 0, bestStepLen = null;
+            /*for (var j = 0; j < individs[0].length - 1; ++j) {
                 minNum += lengthFaces[individs[0][j]][individs[0][j + 1]];
-            }
-            for (var i = 1; i < individs.length; ++i) {
+            }*/
+            for (var i = 0; i < individs.length; ++i) {
                 var way = 0;
                 for (var j = 0; j < individs[i].length - 1; ++j) {
                     way += lengthFaces[individs[i][j]][individs[i][j + 1]];
                 }
 
-                if (minNum > way) {
-                    minNum = way;
-                    minIndex = i;
+                if (bestStepLen > way || bestStepLen == null) {
+                    bestStepLen = way;
+                    bestStepInd = i;
+                }
+            }
+
+            if (bestLen > bestStepLen || bestLen == null) {
+                bestLen = bestStepLen;
+                bestWay = [];
+                for (var j = 0; j < individs[bestStepInd].length; ++j) {
+                    bestWay.push(individs[bestStepInd][j]);
                 }
             }
 
             this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
-            for (var j = 0; j < individs[minIndex].length - 1; ++j) {
-                this.canvas.addObject("line", "#000", false, this.canvas.objects[individs[minIndex][j]].x + this.canvas.objects[individs[minIndex][j]].width / 2, this.canvas.objects[individs[minIndex][j]].y + this.canvas.objects[individs[minIndex][j]].height / 2, this.canvas.objects[individs[minIndex][j + 1]].x + this.canvas.objects[individs[minIndex][j + 1]].width / 2, this.canvas.objects[individs[minIndex][j + 1]].y + this.canvas.objects[individs[minIndex][j + 1]].height / 2);
+            for (var j = 0; j < bestWay.length - 1; ++j) {
+                this.canvas.addObject("line", "#000", false, this.canvas.objects[bestWay[j]].x + this.canvas.objects[bestWay[j]].width / 2, this.canvas.objects[bestWay[j]].y + this.canvas.objects[bestWay[j]].height / 2, this.canvas.objects[bestWay[j + 1]].x + this.canvas.objects[bestWay[j + 1]].width / 2, this.canvas.objects[bestWay[j + 1]].y + this.canvas.objects[bestWay[j + 1]].height / 2);
                 this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;
             }
 
             for (var i in individs) {
-                if (i != minIndex) {
-                    for (var j in individs[i]) {
-                        individs[i][j] = individs[minIndex][j];
-                    }
-                    var j1 = parseInt(Math.random() * (individs[i].length - 2) + 1);
-                    var j2 = parseInt(Math.random() * (individs[i].length - 2) + 1);
-                    var c = individs[i][j1];
-                    individs[i][j1] = individs[i][j2];
-                    individs[i][j2] = c;
+                for (var j in individs[i]) {
+                    individs[i][j] = individs[bestStepInd][j];
                 }
+                var j1 = parseInt(Math.random() * (individs[i].length - 2) + 1);
+                var j2 = parseInt(Math.random() * (individs[i].length - 2) + 1);
+                var c = individs[i][j1];
+                individs[i][j1] = individs[i][j2];
+                individs[i][j2] = c;
             }
+            console.log(`${bestLen}: ${bestWay}`);
         }, 10);
     }
 

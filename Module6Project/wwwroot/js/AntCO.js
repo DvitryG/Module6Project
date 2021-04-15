@@ -91,7 +91,10 @@ class Program {
                 }
                 if (bestLen > length || bestLen == null) {
                     bestLen = length;
-                    bestAnt = ants[i];
+                    bestAnt = [];
+                    for (var j = 0; j < ants[i].length; ++j) {
+                        bestAnt.push(ants[i][j]);
+                    }
                 }
                 var left = Q / length;
 
@@ -102,7 +105,7 @@ class Program {
             }
 
             this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
-
+            //console.log(`${bestLen}: ${bestAnt}`);
             for (var i = 0; i < bestAnt.length - 1; ++i) {
                 this.canvas.addObject("line", "#000", false, this.canvas.objects[bestAnt[i]].x + this.canvas.objects[bestAnt[i]].width / 2, this.canvas.objects[bestAnt[i]].y + this.canvas.objects[bestAnt[i]].height / 2, this.canvas.objects[bestAnt[i + 1]].x + this.canvas.objects[bestAnt[i + 1]].width / 2, this.canvas.objects[bestAnt[i + 1]].y + this.canvas.objects[bestAnt[i + 1]].height / 2);
                 this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;

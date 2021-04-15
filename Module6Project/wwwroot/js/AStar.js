@@ -70,7 +70,7 @@ class Program {
                 return path;
             }
             
-            this.canvas.decorateCell(current.x, current.y, 0, "#00f");
+            //this.canvas.decorateCell(current.x, current.y, 0, "#00f");
 
             current.closed = true;
             var adjacent = adjacents(current);
@@ -127,16 +127,6 @@ class Program {
                     else if (opt.value == 2) this.start.drawPoint();
                     else if (opt.value == 3) this.finish.drawPoint();
                     else console.log(`Неизвесное значение: ${opt.value}`);
-                }
-            }
-        });
-    }
-
-    generators() {
-        var generators = document.getElementById("generators").addEventListener('change', event => {
-            for (var opt of event.target.children) {
-                if (opt.selected) {
-                    /*None*/
                 }
             }
         });
