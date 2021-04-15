@@ -1,4 +1,4 @@
-﻿export class Canvas {
+﻿export class DiscreteArea {
     constructor(canvas_name, canvas_size, cell_size, num_cells, cell_border) {
         this._canvasSize = canvas_size;
         this._cellSize = cell_size;
@@ -12,7 +12,7 @@
                 this._values[i][j] = 0;
             }
         }
-
+        
         this._canvas = document.getElementById(canvas_name);
         this._canvas.height = cell_size * num_cells;
         this._canvas.width = cell_size * num_cells;
@@ -135,4 +135,226 @@ export class Point {
             this.Canvas._canvas.onmousedown = null;
         }
     }
+}
+
+export class SmoothArea {
+    constructor(canvas_name, height, width) {
+        this.height = height;
+        this.width = width;
+        this.objects = [];
+        this.speed = 0;
+        this.objBorders = false;
+        this.intervalID;
+
+        this.canvas = document.getElementById(canvas_name);
+        this.canvas.height = height;
+        this.canvas.width = width;
+        this.canvas.style.imageRendering = "pixelated";
+        this.context = this.canvas.getContext('2d');
+
+        this.context.mozImageSmoothingEnabled = false;
+        this.context.webkitImageSmoothingEnabled = false;
+        this.context.msImageSmoothingEnabled = false;
+        this.context.imageSmoothingEnabled = false;
+    }
+
+    main() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        for (var i in this.objects) {
+            if (this.objects[i].type == "sprite") {
+                if (this.objects[i].decor != null) {
+                    var img = new Image();
+                    img.addEventListener("load", () => {
+                        this.context.drawImage(img, this.objects[i].x, this.objects[i].y, this.objects[i].width, this.objects[i].height);
+                    }, false);
+                    img.src = this.objects[i].sprite;
+                }
+            }
+            else {
+                if (this.objects[i].decor == this.objects[i].decor.match(/#\w{1,8}/)) {
+                    this.context.fillStyle = this.objects[i].decor;
+                    this.context.strokeStyle = this.objects[i].decor;
+                }
+                else {
+                    this.context.fillStyle = "#0000";
+                    this.context.strokeStyle = "#0000";
+                }
+                if (this.objects[i].type == "circle") {
+                    //console.log(`круг`);
+                    this.context.beginPath();
+                    this.context.arc(this.objects[i].x + (this.objects[i].width / 2), this.objects[i].y + (this.objects[i].height / 2), Math.min(this.objects[i].width / 2, this.objects[i].height / 2), 0, 2 * Math.PI, false);
+                    this.context.fill();
+                }
+                else if (this.objects[i].type == "box") {
+                    this.context.fillRect(this.objects[i].x, this.objects[i].y, this.objects[i].width, this.objects[i].height);
+                }
+                else if (this.objects[i].type == "line") {
+                    //console.log(`линия`);
+                    this.context.lineWidth = this.objects[i].lineWidth;
+                    this.context.beginPath();
+                    this.context.moveTo(this.objects[i].x1, this.objects[i].y1);
+                    this.context.lineTo(this.objects[i].x2, this.objects[i].y2);
+                    this.context.stroke();
+                    this.context.lineWidth = 1;
+                }
+                else if (this.objects[i].type == "custom") {
+                    this.objects[i].drawRules;
+                }
+                else console.log(`Некорректный объект под номером: ${i}`);
+            } 
+            if (this.objBorders) {
+                this.context.strokeStyle = "#000";
+                this.context.strokeRect(this.objects[i].x, this.objects[i].y, this.objects[i].width, this.objects[i].height);
+            }
+        }
+    }
+
+    addObject(type, decor, tangible, x, y, w, h) {
+        if (type == "sprite") {
+            this.objects.push({
+                type: "sprite",
+                decor: decor,
+                tangible: tangible,
+                x: x, y: y,
+                width: w,
+                height: h,
+            });
+        }
+        else if (type == "circle") {
+            this.objects.push({
+                type: "circle",
+                decor: decor,
+                tangible: tangible,
+                x: x, y: y,
+                width: w,
+                height: h,
+            });
+        }
+        else if (type == "box") {
+            this.objects.push({
+                type: "box",
+                decor: decor,
+                tangible: tangible,
+                x: x, y: y,
+                width: w,
+                height: h,
+            });
+        }
+        else if (type == "line") {
+            this.objects.push({
+                type: "line",
+                decor: decor,
+                lineWidth: 1,
+                x1: x, y1: y,
+                x2: w, y2: h,
+                tangible: tangible,
+                x: Math.min(x, w), y: Math.min(y, h),
+                width: Math.abs(x - w),
+                height: Math.abs(y - h),
+            });
+        }
+        else if (type == "custom") {
+            this.objects.push({
+                type: "custom",
+                decor: decor,
+                tangible: tangible,
+                x: x, y: y,
+                width: w,
+                height: h,
+                drawRules,
+            });
+        }
+        else return -1;
+    }
+
+    setSpeed(speed) {
+        this._speed = speed;
+        clearInterval(this.intervalID);
+        if (speed > 0) {
+            this.intervalID = setInterval(() => this.main(), this.speed);
+        }
+    }
+
+    objectCollision(obj1, obj2) {
+        if (obj1.tangible == true && obj2.tangible == true) {
+            if (this.pointCollision(obj1, obj2.x, obj2.y)) return true;
+            else if (this.pointCollision(obj1, obj2.x + obj2.width, obj2.y)) return true;
+            else if (this.pointCollision(obj1, obj2.x, obj2.y + obj2.height)) return true;
+            else if (this.pointCollision(obj1, obj2.x + obj2.width, obj2.y + obj2.height)) return true;
+        }
+        else return false;
+    }
+
+    pointCollision(obj, pointX, pointY) {
+        if (!(pointX >= obj.x && pointX <= obj.x + obj.width)) return false;
+        if (!(pointY >= obj.y && pointY <= obj.y + obj.height)) return false;
+        return true;
+    }
+
+    mouseCapture(e, index, mx, my) {
+        if (e.buttons > 0) {
+            var mouseX = e.offsetX;
+            var mouseY = e.offsetY;
+
+            var newObj = {
+                x: mouseX - mx,
+                y: mouseY - my,
+                height: this.objects[index].height,
+                width: this.objects[index].width,
+                tangible: this.objects[index].tangible
+            }
+
+            var collision = false;
+            for (var i in this.objects) {
+                if (i != index) {
+                    if (this.objectCollision(newObj, this.objects[i])) {
+                        collision = true;
+                        break;
+                    }
+                }
+            }
+            if (!collision) {
+                this.objects[index].x = newObj.x;
+                this.objects[index].y = newObj.y;
+            }
+        }
+    }
+
+    mouseSetObj(e, type, decor, tangible, w, h) {
+        //console.log(`клик`);
+        var mouseX = e.offsetX;
+        var mouseY = e.offsetY;
+        var newObj = {
+            tangible: tangible,
+            x: mouseX - w / 2,
+            y: mouseY - h / 2,
+            width: w,
+            height: h,
+        }
+
+        var collision = false;
+        for (var i in this.objects) {
+            if (this.objectCollision(newObj, this.objects[i])) {
+                collision = true;
+                break;
+            }
+        }
+
+        if (!collision) {
+            //console.log(`опа, колизий нет`);
+            this.addObject(type, decor, tangible, newObj.x, newObj.y, w, h);
+            return true;
+        }
+        else return false;
+    }
+
+    /*drawLine(x1, y1, x2, y2, width, color) {
+        if (color == color.match(/#\w{1,8}/)) {
+            this.context.strokeStyle = color;
+        }
+        else return;
+        this.context.lineWidth = width;
+        this.context.moveTo(x1, y1);
+        this.context.lineTo(x2, y2);
+    }*/
 }

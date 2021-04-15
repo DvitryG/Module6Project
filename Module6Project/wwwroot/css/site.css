@@ -1,4 +1,40 @@
 ﻿
+
+html {
+    position: relative;
+    min-height: 100%;
+    text-shadow: 0.06rem 0 0.06rem #ea36af, -0.125rem 0 0.06rem #75fa69;
+    letter-spacing: 0.125em;
+    animation-duration: 0.01s;
+    animation-name: textflicker;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+    /*html::before {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        z-index: 2;
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+    }*/
+
+@keyframes textflicker {
+    from {
+        text-shadow: 1px 0 0 #ea36af, -1px 0 0 #75fa69;
+    }
+
+    to {
+        text-shadow: 1px 0.5px 1px #ea36af, -1px -0.5px 1px #75fa69;
+    }
+}
+
 /**/
 
 a.navbar-brand {
@@ -21,11 +57,6 @@ a {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
 }
 
 .border-top {
@@ -72,8 +103,8 @@ button.accept-policy {
         }
 
 .main {
-    margin-left: 160px; /* Same as the width of the sidenav */
-    font-size: 28px; /* Increased text to enable scrolling */
+    margin-left: 160px;
+    font-size: 28px;
     padding: 0px 10px;
 }
 
@@ -89,7 +120,5 @@ button.accept-policy {
 
 #canvas {
     position: absolute;
-    /*image-rendering: pixelated;
-    width: 500px;
-    height: 500px;*/
+    border: 2px solid black;
 }
