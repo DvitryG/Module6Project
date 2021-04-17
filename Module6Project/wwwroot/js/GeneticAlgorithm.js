@@ -13,7 +13,6 @@ class Program {
     }
 
     GAlg() {
-        
         var intervalID;
         var lengthFaces = new Array(this.numVertex);
         for (var i = 0; i < lengthFaces.length; ++i) {
@@ -100,10 +99,10 @@ class Program {
 
     startButton() {
         var start = document.getElementById("start").addEventListener('click', event => {
+            this.numIndivids = this.individInput();
             if (this.numVertex > 2 && this.numIndivids > 1) {
                 this.canvas.canvas.onmousedown = null;
                 this.canvas.canvas.onmousemove = null;
-                this.numIndivids = this.individInput();
                 this.GAlg();
             }
         });
