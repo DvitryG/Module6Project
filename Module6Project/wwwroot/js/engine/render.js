@@ -61,19 +61,14 @@
                     this.context.fillStyle = decor;
                     this.context.fillRect(this._cellSize * x + this._cellBorder, this._cellSize * y + this._cellBorder, this._cellSize - 2 * this._cellBorder, this._cellSize - 2 * this._cellBorder)
                 }
-                else {
-                    /*Тут должна быть реализована вставка картинок*/
-                }
             }
         }
-        else console.log(`Вы вышли за пределы области: x: ${x}  y: ${y}`);
     }
 
     _onMouse(e, value, decor) {
         var x = Math.floor((e.offsetX * this._numCells) / this._canvasSize);
         var y = Math.floor((e.offsetY * this._numCells) / this._canvasSize);
         if (e.buttons > 0) {
-            //console.log(`x: ${x}  y: ${y}`);
             this.decorateCell(x, y, value, decor);
         }
     }
@@ -115,7 +110,6 @@ export class Point {
         var x = Math.floor((e.offsetX * this.Canvas._numCells) / this.Canvas._canvasSize);
         var y = Math.floor((e.offsetY * this.Canvas._numCells) / this.Canvas._canvasSize);
         if (e.buttons > 0) {
-            //console.log(`x: ${x}  y: ${y}`);
             if (this.lastX != null || this.lastY != null) {
                 this.Canvas.decorateCell(this.lastX, this.lastY, 0, "void");
             }
@@ -149,7 +143,6 @@ export class SmoothArea {
         this.canvas = document.getElementById(canvas_name);
         this.canvas.height = height;
         this.canvas.width = width;
-        this.canvas.style.imageRendering = "pixelated";
         this.context = this.canvas.getContext('2d');
 
         this.context.mozImageSmoothingEnabled = false;
@@ -171,7 +164,7 @@ export class SmoothArea {
                 }
             }
             else {
-                if (this.objects[i].decor == this.objects[i].decor.match(/#\w{1,8}/)) {
+                if (this.objects[i].decor == this.objects[i].decor.match(/(#\w{1,8}|rgb\( *\d{1,3}(\.\d+)? *, *\d{1,3}(\.\d+)? *, *\d{1,3}(\.\d+)? *\))/)[0]) {
                     this.context.fillStyle = this.objects[i].decor;
                     this.context.strokeStyle = this.objects[i].decor;
                 }
@@ -180,7 +173,6 @@ export class SmoothArea {
                     this.context.strokeStyle = "#0000";
                 }
                 if (this.objects[i].type == "circle") {
-                    //console.log(`круг`);
                     this.context.beginPath();
                     this.context.arc(this.objects[i].x + (this.objects[i].width / 2), this.objects[i].y + (this.objects[i].height / 2), Math.min(this.objects[i].width / 2, this.objects[i].height / 2), 0, 2 * Math.PI, false);
                     this.context.fill();
@@ -189,7 +181,6 @@ export class SmoothArea {
                     this.context.fillRect(this.objects[i].x, this.objects[i].y, this.objects[i].width, this.objects[i].height);
                 }
                 else if (this.objects[i].type == "line") {
-                    //console.log(`линия`);
                     this.context.lineWidth = this.objects[i].lineWidth;
                     this.context.beginPath();
                     this.context.moveTo(this.objects[i].x1, this.objects[i].y1);
@@ -321,7 +312,6 @@ export class SmoothArea {
     }
 
     mouseSetObj(e, type, decor, tangible, w, h) {
-        //console.log(`клик`);
         var mouseX = e.offsetX;
         var mouseY = e.offsetY;
         var newObj = {
@@ -341,20 +331,9 @@ export class SmoothArea {
         }
 
         if (!collision) {
-            //console.log(`опа, колизий нет`);
             this.addObject(type, decor, tangible, newObj.x, newObj.y, w, h);
             return true;
         }
         else return false;
     }
-
-    /*drawLine(x1, y1, x2, y2, width, color) {
-        if (color == color.match(/#\w{1,8}/)) {
-            this.context.strokeStyle = color;
-        }
-        else return;
-        this.context.lineWidth = width;
-        this.context.moveTo(x1, y1);
-        this.context.lineTo(x2, y2);
-    }*/
 }

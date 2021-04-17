@@ -3,37 +3,28 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] | Module6Project</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] | Desperato</title>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
-    <div class="sidenav">
-        <a class="navbar-brand" asp-area="" asp-page="/Index">Module6Project</a>
-        <a asp-area="" asp-page="/algorithms/AStar">A*</a>
-        <a asp-area="" asp-page="/algorithms/ClusterAnalysis">Алгоритм кластеризации</a>
-        <a asp-area="" asp-page="/algorithms/GeneticAlgorithm">Генетический алгоритм</a>
-        <a asp-area="" asp-page="/algorithms/AntCO">Муравьиный алгоритм</a>
-        <a asp-area="" asp-page="/algorithms/DecisionTrees">Дерево решений</a>
-        <a asp-area="" asp-page="/algorithms/NeuralNetwork">Нейронная сеть</a>
+    <div class="logo">
+        <a asp-area="" asp-page="/Index">
+            <img id="svg" src="~/logo.svg">
+        </a>
+        <h1>Desperato</h1>
     </div>
-    <div class="main">
-        <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div id="foo" class="container">
-                    @ViewData["Title"]
-                </div>
-            </nav>
-        </header>
-        <div class="container">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
+    <div id="content" class="wrapper">
+        <div class="consoleHead">desperato.exe</div>
+        <div class="console">
+            <div id="output">
+            </div>
+            <p>$ <input id="input" class="input" type="text"></p>
+        </div>
+        <div class="main">
+            @RenderBody()
         </div>
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)

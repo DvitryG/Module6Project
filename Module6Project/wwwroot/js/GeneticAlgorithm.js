@@ -1,11 +1,10 @@
 ﻿"use strict";
-//import { Callbacks } from "jquery";
 import { SmoothArea } from "./engine/render.js"
 
 class Program {
     constructor() {
-        this.canvas = new SmoothArea("canvas", 500, 1000);
-        this.mouseLogic(true, "circle", "#000", true, 20, 20);
+        this.canvas = new SmoothArea("canvas", 500, 1128);
+        this.mouseLogic(true, "circle", "#fff", true, 20, 20);
         this.startButton();
         this.canvas.setSpeed(10);
 
@@ -14,10 +13,7 @@ class Program {
     }
 
     GAlg() {
-        if (this.numVertex < 3 || this.numIndivids == null) {
-            console.log(`Вы в своем уме, увОжаемый?`);
-            return;
-        }
+        
         var intervalID;
         var lengthFaces = new Array(this.numVertex);
         for (var i = 0; i < lengthFaces.length; ++i) {
@@ -59,10 +55,7 @@ class Program {
 
 
         intervalID = setInterval(() => {
-            var bestStepInd = 0, bestStepLen = null;
-            /*for (var j = 0; j < individs[0].length - 1; ++j) {
-                minNum += lengthFaces[individs[0][j]][individs[0][j + 1]];
-            }*/
+            var bestStepWay, bestStepLen = null;
             for (var i = 0; i < individs.length; ++i) {
                 var way = 0;
                 for (var j = 0; j < individs[i].length - 1; ++j) {
@@ -71,27 +64,30 @@ class Program {
 
                 if (bestStepLen > way || bestStepLen == null) {
                     bestStepLen = way;
-                    bestStepInd = i;
+                    bestStepWay = [];
+                    for (var j = 0; j < individs[i].length; ++j) {
+                        bestStepWay.push(individs[i][j]);
+                    }
                 }
             }
 
             if (bestLen > bestStepLen || bestLen == null) {
                 bestLen = bestStepLen;
                 bestWay = [];
-                for (var j = 0; j < individs[bestStepInd].length; ++j) {
-                    bestWay.push(individs[bestStepInd][j]);
+                for (var j = 0; j < bestStepWay.length; ++j) {
+                    bestWay.push(bestStepWay[j]);
                 }
             }
 
             this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
             for (var j = 0; j < bestWay.length - 1; ++j) {
-                this.canvas.addObject("line", "#000", false, this.canvas.objects[bestWay[j]].x + this.canvas.objects[bestWay[j]].width / 2, this.canvas.objects[bestWay[j]].y + this.canvas.objects[bestWay[j]].height / 2, this.canvas.objects[bestWay[j + 1]].x + this.canvas.objects[bestWay[j + 1]].width / 2, this.canvas.objects[bestWay[j + 1]].y + this.canvas.objects[bestWay[j + 1]].height / 2);
+                this.canvas.addObject("line", "#fff", false, this.canvas.objects[bestWay[j]].x + this.canvas.objects[bestWay[j]].width / 2, this.canvas.objects[bestWay[j]].y + this.canvas.objects[bestWay[j]].height / 2, this.canvas.objects[bestWay[j + 1]].x + this.canvas.objects[bestWay[j + 1]].width / 2, this.canvas.objects[bestWay[j + 1]].y + this.canvas.objects[bestWay[j + 1]].height / 2);
                 this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;
             }
 
             for (var i in individs) {
                 for (var j in individs[i]) {
-                    individs[i][j] = individs[bestStepInd][j];
+                    individs[i][j] = bestStepWay[j];
                 }
                 var j1 = parseInt(Math.random() * (individs[i].length - 2) + 1);
                 var j2 = parseInt(Math.random() * (individs[i].length - 2) + 1);
@@ -99,17 +95,17 @@ class Program {
                 individs[i][j1] = individs[i][j2];
                 individs[i][j2] = c;
             }
-            console.log(`${bestLen}: ${bestWay}`);
         }, 10);
     }
 
     startButton() {
         var start = document.getElementById("start").addEventListener('click', event => {
-            this.canvas.canvas.onmousedown = null;
-            this.canvas.canvas.onmousemove = null;
-            this.numIndivids = this.individInput();
-            this.GAlg();
-
+            if (this.numVertex > 2 && this.numIndivids > 1) {
+                this.canvas.canvas.onmousedown = null;
+                this.canvas.canvas.onmousemove = null;
+                this.numIndivids = this.individInput();
+                this.GAlg();
+            }
         });
     }
 

@@ -1,10 +1,12 @@
 ﻿"use strict";
-import { Canvas } from "./engine/render.js"
+import { DiscreteArea } from "./engine/render.js"
 
-function init() {
-    var canvas = new Canvas("canvas", 500, 40, 50, 1);
-    canvas.drawGrid("#000");
-    canvas.onMouseDraw(1, "#f00");
+class Program {
+    constructor() {
+        this.canvas = new DiscreteArea("canvas", 500, 1, 25, 0);
+        this.canvas.setMouseDraw(true);
+        this.canvas.mouseDraw(1, "#f00");
+    }
 }
 
-window.onload = init;
+window.onload = new Program();
