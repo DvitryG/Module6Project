@@ -3,7 +3,7 @@ import { DiscreteArea, Point } from "./engine/render.js";
 
 class Program {
     constructor() {
-        this.canvas;
+        this.canvas = null;
         this.num_cells;
         this.start;
         this.finish;
@@ -127,11 +127,14 @@ class Program {
 
     startButton() {
         var start = document.getElementById("start").addEventListener('click', event => {
-            var way = this.AStar();
-            if (way != false) {
-                while (way.length > 0) {
-                    var n = way.pop();
-                    this.canvas.decorateCell(n.x, n.y, 0, "#ff0");
+            if (this.canvas != null) {
+                this.canvas.setMouseDraw(false);
+                var way = this.AStar();
+                if (way != false) {
+                    while (way.length > 0) {
+                        var n = way.pop();
+                        this.canvas.decorateCell(n.x, n.y, 0, "#ff0");
+                    }
                 }
             }
         });
