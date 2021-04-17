@@ -1,31 +1,25 @@
-﻿
+﻿@font-face {
+    font-family: 'pixilated';
+    src: local('pixilated'), url(pixilated.ttf);
+}
 
-html {
+* {
+    font-family: pixilated;
     position: relative;
-    min-height: 100%;
-    text-shadow: 0.06rem 0 0.06rem #ea36af, -0.125rem 0 0.06rem #75fa69;
+    /*text-shadow: 0.06rem 0 0.06rem #ea36af, -0.125rem 0 0.06rem #75fa69;
     letter-spacing: 0.125em;
     animation-duration: 0.01s;
     animation-name: textflicker;
     animation-iteration-count: infinite;
-    animation-direction: alternate;
+    animation-direction: alternate;*/
 }
 
-    /*html::before {
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-        z-index: 2;
-        background-size: 100% 2px, 3px 100%;
-        pointer-events: none;
-    }*/
+html {
+    background-color: #000;
+    color: #fff;
+}
 
-@keyframes textflicker {
+/*@keyframes textflicker {
     from {
         text-shadow: 1px 0 0 #ea36af, -1px 0 0 #75fa69;
     }
@@ -33,92 +27,76 @@ html {
     to {
         text-shadow: 1px 0.5px 1px #ea36af, -1px -0.5px 1px #75fa69;
     }
+}*/
+
+::selection {
+    color: #000;
+    background-color: #fff;
 }
 
-/**/
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+::-webkit-scrollbar {
+    background-color: #fff;
 }
 
-a {
-  color: #0366d6;
+::-webkit-scrollbar-track-piece {
+    background-color: #fff;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+::-webkit-scrollbar-thumb {
+    background-color: #000;
+    border: 3px solid;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
-}
-
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-/**/
-
-.sidenav {
+.logo {
+    text-align: center;
     height: 100%;
-    width: 200px;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: #343a40;
-    overflow-x: hidden;
-    padding-top: 20px;
+    width: 100%;
 }
 
-    .sidenav a {
-        padding: 6px 8px 6px 16px;
-        text-decoration: none;
-        font-size: 20px;
-        color: #adb5bd;
-        display: block;
-    }
+.console {
+    border: 2px solid white;
+    height: 50ch;
+    overflow-y: scroll;
+}
 
-        .sidenav a:hover {
-            color: #f1f1f1;
-        }
+.wrapper {
+    border: 2px solid white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+}
+
+.input {
+    background-color: #000;
+    color: #fff;
+    width: 85%;
+    border: 0px;
+}
 
 .main {
-    margin-left: 160px;
-    font-size: 28px;
-    padding: 0px 10px;
+
 }
 
-@media screen and (max-height: 450px) {
-    .sidenav {
-        padding-top: 15px;
+button, input, select {
+    color: #fff;
+    background-color: #000;
+    border: 2px solid white;
 }
 
-        .sidenav a {
-            font-size: 18px;
+.tools {
+    margin: 0 25% 0 25%;
+    width: 50%;
 }
+
+.consoleHead {
+    border: 2px solid white;
+    text-align: center;
+}
+
+pre {
+    margin: 0em 0px;
 }
 
 #canvas {
-    position: absolute;
-    border: 2px solid black;
+    border: 2px solid white;
 }

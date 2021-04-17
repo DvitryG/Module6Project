@@ -3,8 +3,8 @@ import { SmoothArea } from "./engine/render.js"
 
 class Program {
     constructor() {
-        this.canvas = new SmoothArea("canvas", 500, 1000);
-        this.mouseLogic(true, "circle", "#000", true, 20, 20);
+        this.canvas = new SmoothArea("canvas", 500, 1128);
+        this.mouseLogic(true, "circle", "#fff", true, 20, 20);
         this.startButton();
         this.canvas.setSpeed(10);
 
@@ -12,10 +12,6 @@ class Program {
     }
 
     AntCO() {
-        if (this.numVertex < 3) {
-            console.log(`Вы в своем уме, увОжаемый?`);
-            return;
-        }
         var intervalID;
         var alfa = 1;
         var beta = 4;
@@ -105,9 +101,8 @@ class Program {
             }
 
             this.canvas.objects.splice(this.numVertex, this.canvas.objects.length);
-            //console.log(`${bestLen}: ${bestAnt}`);
             for (var i = 0; i < bestAnt.length - 1; ++i) {
-                this.canvas.addObject("line", "#000", false, this.canvas.objects[bestAnt[i]].x + this.canvas.objects[bestAnt[i]].width / 2, this.canvas.objects[bestAnt[i]].y + this.canvas.objects[bestAnt[i]].height / 2, this.canvas.objects[bestAnt[i + 1]].x + this.canvas.objects[bestAnt[i + 1]].width / 2, this.canvas.objects[bestAnt[i + 1]].y + this.canvas.objects[bestAnt[i + 1]].height / 2);
+                this.canvas.addObject("line", "#fff", false, this.canvas.objects[bestAnt[i]].x + this.canvas.objects[bestAnt[i]].width / 2, this.canvas.objects[bestAnt[i]].y + this.canvas.objects[bestAnt[i]].height / 2, this.canvas.objects[bestAnt[i + 1]].x + this.canvas.objects[bestAnt[i + 1]].width / 2, this.canvas.objects[bestAnt[i + 1]].y + this.canvas.objects[bestAnt[i + 1]].height / 2);
                 this.canvas.objects[this.canvas.objects.length - 1].lineWidth = 2;
             }
 
@@ -116,10 +111,11 @@ class Program {
 
     startButton() {
         var start = document.getElementById("start").addEventListener('click', event => {
-            this.canvas.canvas.onmousedown = null;
-            this.canvas.canvas.onmousemove = null;
-            this.AntCO();
-
+            if (this.numVertex > 2) {
+                this.canvas.canvas.onmousedown = null;
+                this.canvas.canvas.onmousemove = null;
+                this.AntCO();
+            }
         });
     }
 
